@@ -1,0 +1,45 @@
+experiment:
+  name: default_experiment
+  seed: 42
+  output_dir: results/
+
+data:
+  root_dir: ./datasets
+  version: dataset_20221008
+  split: train
+  use_rgb_masks: false
+  color_map_csv: ListOfClassesAndColorCodes.csv
+  img_size: 512
+  batch_size: 4
+  workers: 4
+
+model:
+  name: deeplabv3plus
+  backbone: resnet50
+  pretrained: true
+
+train:
+  epochs: 50
+  lr: 1e-4
+  optimizer: adam
+  loss: dice_ce  # options: ce, dice, dice_ce, weighted_ce
+  scheduler: step
+  step_size: 10
+  gamma: 0.5
+
+loss:
+  type: weighted_ce
+  class_weights:
+    background: 0.2
+    ribbons: 3.0
+    gridline: 10.0
+    inactive: 10.0
+    crack: 20.0
+    other: 1.0
+
+logging:
+  use_wandb: false
+  print_freq: 10
+  save_best_only: true
+
+device: cuda
