@@ -1,6 +1,6 @@
 # 🔆 Solar Module Health Monitoring via EL Image Segmentation
 
-A deep learning-based pipeline for automated **fault detection and classification** in solar PV modules using **electroluminescence (EL) images**. The system performs semantic segmentation to identify 29+ defect and feature classes across multiple datasets with varying formats and gray-coded masks.
+A deep learning-based pipeline for automated **fault detection and classification** in solar PV modules using **electroluminescence (EL) images**. The system performs semantic segmentation to identify 14 defect and 14 feature classes across multiple datasets with varying formats and gray-coded masks.
 
 ---
 
