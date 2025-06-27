@@ -126,13 +126,3 @@ pip install -r requirements.txt
 
 ---
 
-## 👤 Author
-
-Developed by **Your Name** under mentorship at **IIT Mandi**  
-Project: *Condition Monitoring of Solar PV Modules through Image Analysis*
-
----
-
-## 📄 License
-
-MIT License – free for academic and non-commercial use.
