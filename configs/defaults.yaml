@@ -3,10 +3,13 @@ experiment:
   seed: 42
   output_dir: results/
 
+mode: train
+
 data:
   root_dir: ./datasets
   version: dataset_20221008
-  split: train
+  num_classes: 29
+  split: test
   use_rgb_masks: false
   color_map_csv: ListOfClassesAndColorCodes.csv
   img_size: 512
@@ -19,27 +22,29 @@ model:
   pretrained: true
 
 train:
-  epochs: 50
+  epochs: 15
   lr: 1e-4
   optimizer: adam
-  loss: dice_ce  # options: ce, dice, dice_ce, weighted_ce
   scheduler: step
-  step_size: 10
-  gamma: 0.5
+  step_size: 5
+  gamma: 1
 
 loss:
-  type: weighted_ce
+  type: dice_ce   # options: ce, dice, dice_ce, weighted_ce
+  alpha: 0.7
   class_weights:
-    background: 0.2
-    ribbons: 3.0
-    gridline: 10.0
-    inactive: 10.0
-    crack: 20.0
-    other: 1.0
+
+    bckgnd: 0.05
+    padding: 0.05
+    ribbons: 1.0
+    gridline: 1.0
+    inactive: 2.0
+    crack: 3.0
+    other: 0.8
 
 logging:
   use_wandb: false
-  print_freq: 10
+  print_freq: 1
   save_best_only: true
 
 device: cuda

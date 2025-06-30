@@ -17,6 +17,7 @@ def get_class_weights_from_yaml(cfg, class_names):
 def build_loss_fn(cfg, class_names):
     weights = get_class_weights_from_yaml(cfg, class_names)
     weights = weights.to(cfg['device'])
+    alpha = cfg['loss']['alpha'] # Default alpha for DiceCELoss
 
     if cfg['loss']['type'] == 'ce':
         return nn.CrossEntropyLoss()
@@ -25,7 +26,7 @@ def build_loss_fn(cfg, class_names):
     elif cfg['loss']['type'] == 'dice':
         return DiceLoss()
     elif cfg['loss']['type'] == 'dice_ce':
-        return DiceCELoss(weights)
+        return DiceCELoss(weights, alpha)
     else:
         raise ValueError(f"Unknown loss type: {cfg['loss']['type']}")
 
@@ -48,10 +49,11 @@ class DiceLoss(nn.Module):
 
 
 class DiceCELoss(nn.Module):
-    def __init__(self, weights=None):
+    def __init__(self, weights=None, alpha=0.5):
         super(DiceCELoss, self).__init__()
         self.ce = nn.CrossEntropyLoss(weight=weights)
         self.dice = DiceLoss()
+        self.alpha = alpha
 
     def forward(self, inputs, targets):
-        return self.ce(inputs, targets) + self.dice(inputs, targets)
+        return self.alpha*self.ce(inputs, targets) + (1-self.alpha)*self.dice(inputs, targets)

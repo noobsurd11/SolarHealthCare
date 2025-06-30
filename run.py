@@ -1,15 +1,16 @@
 import torch
 import numpy as np
 from PIL import Image
-from models.deeplabv3plus import build_model
-from data.dataset import SolarDataset
+from model.smp import build_model
+from datasets.dataloader import SolarDataset
 from utils.visualization import decode_segmap
 import torchvision.transforms as T
 import yaml
 import os
 
 
-def predict_single_image(cfg_path, image_path, save_path):
+def predict_single_image( image_path, save_path):
+    cfg_path = os.path.join('configs/defaults.yaml')
     with open(cfg_path, 'r') as f:
         cfg = yaml.safe_load(f)
 
@@ -42,9 +43,8 @@ def predict_single_image(cfg_path, image_path, save_path):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', type=str, required=True, help='Path to YAML config')
     parser.add_argument('--image', type=str, required=True, help='Path to grayscale EL image')
     parser.add_argument('--save', type=str, required=True, help='Path to save RGB prediction')
     args = parser.parse_args()
 
-    predict_single_image(args.config, args.image, args.save)
+    predict_single_image(args.image, args.save)

@@ -1,8 +1,15 @@
 import torch
 import numpy as np
+import pandas as pd
+import os
+from collections import defaultdict
+from PIL import Image
+from tqdm import tqdm
+
+
 from sklearn.metrics import confusion_matrix
 
-def compute_metrics(preds, targets, num_classes):
+def compute_metrics(preds, targets, csv_path):
     """
     Compute per-class IoU, mean IoU, pixel accuracy, and mean recall.
     Args:
@@ -15,6 +22,10 @@ def compute_metrics(preds, targets, num_classes):
     with torch.no_grad():
         preds = torch.argmax(preds, dim=1).cpu().numpy().flatten()
         targets = targets.cpu().numpy().flatten()
+
+        df = pd.read_csv(csv_path)
+        class_names = df['Desc'].tolist()
+        num_classes = len(class_names)
 
         cm = confusion_matrix(targets, preds, labels=list(range(num_classes)))
 
@@ -37,3 +48,19 @@ def compute_metrics(preds, targets, num_classes):
             'pixel_acc': pixel_acc,
             'mean_recall': mean_recall
         }
+    
+def compute_pixel_frequencies(mask_folder):
+    freq_dict = defaultdict(int)
+
+    mask_files = [f for f in os.listdir(mask_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+
+    for file in tqdm(mask_files, desc="Processing masks"):
+        mask_path = os.path.join(mask_folder, file)
+        mask = Image.open(mask_path).convert("L")  # ensure grayscale
+        mask_np = np.array(mask)
+
+        unique, counts = np.unique(mask_np, return_counts=True)
+        for cls, count in zip(unique, counts):
+            freq_dict[int(cls)] += int(count)
+
+    return dict(sorted(freq_dict.items()))

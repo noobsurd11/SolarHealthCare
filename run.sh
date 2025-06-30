@@ -9,8 +9,9 @@ now=$(date +"%Y%m%d_%H%M")
 
 # Define experiment name and config
 EXP_NAME="model_run_${now}"
-CONFIG="configs/default.yaml"
+CONFIG="configs/defaults.yaml"
 DEVICE="cuda"
+MODE='train'
 
 # Create logs directory if needed
 mkdir -p logs
@@ -18,9 +19,10 @@ mkdir -p logs
 # Run training
 echo "[🚀] Starting experiment: $EXP_NAME"
 python main.py \
+  --mode $MODE \
   --config $CONFIG \
   --device $DEVICE \
   --experiment $EXP_NAME \
   > logs/train_$EXP_NAME.log 2>&1
 
-echo "[✅] Training complete. Log saved to logs/train_$EXP_NAME.log"
+echo "Log saved to logs/train_$EXP_NAME.log"

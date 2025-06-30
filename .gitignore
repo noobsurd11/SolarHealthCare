@@ -1,2 +1,9 @@
 /datasets
-
+/__pycache__
+/logs
+/.vscode
+/results/test_preds
+/model/__pycache__
+/utils/__pycache__
+/__pycache__
+/result1.png

@@ -3,16 +3,17 @@ import yaml
 import os
 import traceback
 
-from train.train import train
-from data.dataset import SolarDataset
-from models.deeplabv3plus import build_model
-from utils.losses import build_loss_fn, get_class_weights_from_yaml
+from train import train
+from test import test
+from datasets.dataloader import SolarDataset
+from model.smp import build_model
 from torch.utils.data import DataLoader
 import torch
 
 
 def get_args():
     parser = argparse.ArgumentParser(description="Solar PV Fault Segmentation")
+    parser.add_argument('--mode', type=str, help='Train or Test')
     parser.add_argument('--config', type=str, help='Path to YAML config file')
     parser.add_argument('--device', type=str, help='cuda or cpu')
     parser.add_argument('--experiment', type=str, help='Optional experiment name')
@@ -74,11 +75,20 @@ if __name__ == '__main__':
         # Set random seed
         torch.manual_seed(cfg['experiment']['seed'])
 
-        # Sanity check (model and data)
         sanity_check(cfg)
+        train(cfg)
+        # Sanity check (model and data)
+        # if cfg['mode'] == 'train':
+
+
+        # elif cfg['mode'] == 'test':
+        #     test(cfg)
+
+        
+        
 
         # Training entry point
-        train(cfg)
+        
 
     except Exception as e:
         print("[!] Fatal error during setup:")
