@@ -3,7 +3,8 @@
 /logs
 /.vscode
 /results/test_preds
-/model/__pycache__
+/model/__pycache__/
+/results/best_model.pth
 /utils/__pycache__
 /__pycache__
 /result1.png
