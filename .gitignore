@@ -8,3 +8,7 @@
 /utils/__pycache__
 /__pycache__
 /result1.png
+/.gitignore
+/model/example_camvid_multiclassB_quita.ipynb
+/model/example_camvid_multiclassC2_quita.ipynb
+
